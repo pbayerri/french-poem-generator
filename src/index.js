@@ -1,13 +1,28 @@
-function generatePoem(event) {
-  event.preventDefault();
-
-  let poemElement = document.querySelector("#poem");
+function displayPoem(response) {
+  console.log("Poem generated");
   new Typewriter("#poem", {
-    strings: "La tombe dit à la rose",
+    strings: response.data.answer,
     autoStart: true,
     cursor: null,
     delay: 5,
   });
+}
+
+function generatePoem(event) {
+  event.preventDefault();
+
+  let instructionsInput = document.querySelector("#user-instructions");
+  let apiKey = "d5a8tc153764o0ddf44a90db93f23b4d";
+  let prompt = `User instructions: Generate a French poem about ${instructionsInput.value}`;
+  let context =
+    "You are a romantic poem expert and love to write short poems. Your mission is to generate a 4 line poem in basic HTML language and separate each line with a <br /> element. Make sure to follow the user instructions. Show only the poem without an introduction. Remove the `html` at the front and the three ```from the beginning and the end of the poem. Sign at the end with SheCodes AI in </strong> element.";
+  let apiUrl = `https://api.shecodes.io/ai/v1/generate?prompt=${prompt}&context=${context}&key=${apiKey}`;
+
+  console.log("generating poem...");
+  console.log(`Prompt: ${prompt}`);
+  console.log(`Context: ${context}`);
+
+  axios.get(apiUrl).then(displayPoem);
 }
 
 let poemElementForm = document.querySelector("#poem-generator-form");
